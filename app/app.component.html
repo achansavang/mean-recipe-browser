@@ -1,0 +1,19 @@
+<ul class="recipes">
+  <div><label><input type="checkbox" (change)="switchOrder()" />Order by total time</label></div>
+  <div>Filter:{{getFilter()}} <button (click)="filter()">Reset filter</button></div>
+  <li *ngFor="let recipe of recipes" (click)="onSelect(recipe)"
+      [class.selected]="recipe === selectedRecipe">
+    <span>{{recipe.name}}</span>
+	<div *ngIf="selectedRecipe && selectedRecipe._id === recipe._id">
+	  <div><label>Source: </label><a (click)="filter(selectedRecipe.source)" >{{selectedRecipe.source}}</a></div>
+	  <div><label>Total time: </label>{{selectedRecipe.totalTime}}</div>
+	  <div><label>Ingredients: </label>{{selectedRecipe.indegredients}}</div>
+	  <div><label>description: </label>{{selectedRecipe.description}}</div>
+	</div>
+  </li>
+</ul>
+<div>
+<button (click)="previous()">Previous</button>
+<button (click)="next()">Next</button>
+{{page}} / {{totalPages}}
+</div>
