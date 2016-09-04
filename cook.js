@@ -37,14 +37,21 @@ MongoClient.connect("mongodb://localhost:27017/test", function(err, db) {
 
 	var col = db.collection("recipes");
 
+	console.log("creating recipes collection...");
 	col.insertMany( recipes_array, function(err, r) {
-		console.log("finish");
+		console.log("done!");
 
+		console.log("creating recipes-totalTimeOrder collection...");
 		// Execute aggregate, notice the pipeline is expressed as an Array
 	    var cursor = col.aggregate([
 	        { $sort : {	totalTime : 1 }},
 	        { $out : "recipes-totalTimeOrder" }
-	      ], {allowDiskUse: true}, function(err) { console.log("err",err); });
+	      ], {allowDiskUse: true}, function(err) { 
+	      	if (err) 
+	      		console.log(err); 
+			console.log("done!");
+	      	db.close();
+	      });
 	});
 
 });
