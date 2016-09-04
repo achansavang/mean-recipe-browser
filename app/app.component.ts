@@ -35,6 +35,10 @@ export class AppComponent implements OnInit {
     this.recipeService.getRecipes(this.page, this.recipesPerPage).then(recipes => {
       this.recipes = recipes
     });
+
+    this.recipeService.getNumberOfRecipes().then(count => {
+      this.totalPages = Math.ceil(count / this.recipesPerPage)
+    });
   }
 
   onSelect(recipe: Recipe): void {

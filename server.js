@@ -36,23 +36,6 @@ mongodb.connect("mongodb://localhost:27017/test", function(err, db) {
 	// app.use('/recipes', recipes);
 
 	// routes
-	app.get('/:collection(recipes|recipes-totalTimeOrder)/:nPerPage/:pageNumber/:filter*?', function(req, res, next) {
-	    var pageNumber = parseInt(req.params.pageNumber);
-	    var nPerPage = parseInt(req.params.nPerPage);
-	    var source = req.params.filter === undefined ? "" : req.params.filter;
-
-	    var filter = {};
-	    if (source !== "")
-	    	filter = {source: source};
-
-	    var recipes_collection = db.collection(req.params.collection);
-	    recipes_collection.find(filter)
-	    	.skip(pageNumber > 0 ? ((pageNumber-1)*nPerPage) : 0)
-	    	.limit(nPerPage).toArray(function(err, docs) {
-		    	res.json(docs);
-	    	});
-	});
-
 	app.get('/:collection(recipes|recipes-totalTimeOrder)/count/:filter*?', function(req, res, next) {
 	    var recipes_collection = db.collection(req.params.collection);
 	    var source = req.params.filter === undefined ? "" : req.params.filter;
@@ -61,11 +44,30 @@ mongodb.connect("mongodb://localhost:27017/test", function(err, db) {
 	    if (source !== "")
 	    	filter = {source: source};
 	    
-	    var result;
 	    recipes_collection.count(filter, function(err, count) {
+	    	if (err) console.log(err);
+	    	console.log(count)
 	    	res.json(count);
     	});
 	});
+	
+	app.get('/:collection(recipes|recipes-totalTimeOrder)/:nPerPage/:pageNumber/:filter*?', function(req, res, next) {
+	    var pageNumber = parseInt(req.params.pageNumber);
+	    var nPerPage = parseInt(req.params.nPerPage);
+	    var source = req.params.filter === undefined ? "" : req.params.filter;
+
+	    var filter = {};
+	    if (source !== "")
+	    	filter = {source: source};
+	    var recipes_collection = db.collection(req.params.collection);
+	    recipes_collection.find(filter)
+	    	.skip(pageNumber > 0 ? ((pageNumber-1)*nPerPage) : 0)
+	    	.limit(nPerPage).toArray(function(err, docs) {
+		    	res.json(docs);
+	    	});
+	});
+
+	
 
 	// // catch 404 and forward to error handler
 	// app.use(function(req, res, next) {
